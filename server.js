@@ -6,15 +6,15 @@ const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+var utils = require("./utils/main.utils");
 
 const userRoutes = require("./src/routes/user.routes");
 const authRoutes = require("./src/routes/auth.routes");
-const projectRoutes = require("./src/routes/project.routes");
-const taskRoutes = require("./src/routes/task.routes");
-const tagRoutes = require("./src/routes/tag.routes");
+// const projectRoutes = require("./src/routes/project.routes");
+// const taskRoutes = require("./src/routes/task.routes");
+// const tagRoutes = require("./src/routes/tag.routes");
 
 //modules needed for auth
-var utils = require("./utils/main.utils");
 const User = require("./src/models/user.model");
 
 // create express app
@@ -60,6 +60,7 @@ passport.serializeUser((user, done) => {
   console.log("\n");
   done(null, user);
 });
+
 passport.deserializeUser((user, done) => {
   if (!user) {
     return done(Error("Username or password is incorrect!"), null);
@@ -104,9 +105,9 @@ const BASE_API = "/api/v1/";
 
 app.use(BASE_API + "user", userRoutes);
 app.use(BASE_API + "auth", authRoutes);
-app.use(BASE_API + "project", projectRoutes);
-app.use(BASE_API + "task", taskRoutes);
-app.use("BASE_API + tag", tagRoutes);
+// app.use(BASE_API + "project", projectRoutes);
+// app.use(BASE_API + "task", taskRoutes);
+// app.use(BASE_API + "tag", tagRoutes);
 
 // listen for requests
 app.listen(port, () => {

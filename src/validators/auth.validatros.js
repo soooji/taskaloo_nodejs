@@ -13,25 +13,16 @@ var register = {
     },
     length: {
       minimum: 3,
-      tooShort: "needs to have 3 words or more",
+      tooShort: "needs to have 3 letters or more",
     },
   },
-  security_question: {
-    presence: {
-      message: "is required",
-    },
-    length: {
-      minimum: 2,
-      tooShort: "needs to have 2 words or more",
-    },
-  },
-  security_answer: {
+  answer: {
     presence: {
       message: "is required",
     },
     length: {
       minimum: 1,
-      tooShort: "needs to have 1 words or more",
+      tooShort: "needs to have 1 letters or more",
     },
   },
   password: {
@@ -43,6 +34,24 @@ var register = {
       message: "must be 8 characters and contains both letter and digit",
     },
   },
+  first_name: {
+    presence: {
+      message: "is required",
+    },
+    length: {
+      minimum: 2,
+      tooShort: "needs to have 2 letters or more",
+    },
+  },
+  last_name: {
+    presence: {
+      message: "is required",
+    },
+    length: {
+      minimum: 2,
+      tooShort: "needs to have 2 letters or more",
+    },
+  },
 };
 
 var changePassword = {
@@ -52,25 +61,16 @@ var changePassword = {
     },
     length: {
       minimum: 3,
-      tooShort: "needs to have 3 words or more",
+      tooShort: "needs to have 3 letters or more",
     },
   },
-  security_question: {
-    presence: {
-      message: "is required",
-    },
-    length: {
-      minimum: 2,
-      tooShort: "needs to have 2 words or more",
-    },
-  },
-  security_answer: {
+  answer: {
     presence: {
       message: "is required",
     },
     length: {
       minimum: 1,
-      tooShort: "needs to have 2 words or more",
+      tooShort: "needs to have 2 letters or more",
     },
   },
   password: {

@@ -7,8 +7,9 @@ var utils = require("../../utils/main.utils");
 var User = function (user) {
   this.username = user.username;
   this.email = user.email;
-  this.security_question = user.security_question;
-  this.security_answer = user.security_answer;
+  this.answer = user.answer;
+  this.first_name = user.first_name;
+  this.last_name = user.last_name;
 
   let hashResult = utils.saltHash(user.password);
   this.password = hashResult.passwordHash;
@@ -26,18 +27,29 @@ User.register = function (newUser, result) {
   });
 };
 
-
 User.changePassword = function (user, result) {
   dbConn.query(
     "UPDATE users SET password=? WHERE username = ?",
-    [
-      user.password,
-      user.username
-    ],
+    [user.password, user.username],
     function (err, res) {
       if (err) {
         console.log("error: ", err);
         result(null, err);
+      } else {
+        result(null, res);
+      }
+    }
+  );
+};
+
+User.getAnswer = function (username, result) {
+  dbConn.query(
+    "Select id, username, answer, salt  from users where username = ? ",
+    username,
+    function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
       } else {
         result(null, res);
       }

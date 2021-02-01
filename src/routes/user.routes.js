@@ -3,25 +3,32 @@ const router = express.Router();
 const userController = require("../controllers/user.controller");
 const connectEnsureLogin = require("connect-ensure-login");
 
-// If Admin
-router.get("/", connectEnsureLogin.ensureLoggedIn(), userController.getUsers);
-router.get("/:id", connectEnsureLogin.ensureLoggedIn(), userController.getUser);
-
 // All users
 router.get(
   "/profile",
   connectEnsureLogin.ensureLoggedIn(),
-  userController.getUserProfile
+  userController.getUser
 );
+
 router.put(
   "/profile",
   connectEnsureLogin.ensureLoggedIn(),
-  userController.updateUserProfile
+  userController.updateProfile
 );
+
 router.put(
   "/change-password",
   connectEnsureLogin.ensureLoggedIn(),
-  userController.updateUserPassword
+  userController.changePassword
 );
+
+// If Admin
+router.get("/all", connectEnsureLogin.ensureLoggedIn(), userController.getUsers);
+router.get(
+  "/all/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  userController.getUserItem
+);
+
 
 module.exports = router;

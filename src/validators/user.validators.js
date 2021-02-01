@@ -1,11 +1,19 @@
-var clientProfile = {
+var updateUserProfile = {
+  email: {
+    presence: {
+      message: "is required",
+    },
+    email: {
+      message: "doesn't look like a valid email",
+    },
+  },
   first_name: {
     presence: {
       message: "is required",
     },
     length: {
       minimum: 2,
-      tooShort: "needs to have 2 words or more",
+      tooShort: "needs to have 2 letters or more",
     },
   },
   last_name: {
@@ -14,39 +22,30 @@ var clientProfile = {
     },
     length: {
       minimum: 2,
-      tooShort: "needs to have 2 words or more",
-    },
-  },
-  birth_date: {
-    presence: {
-      message: "is required",
-    },
-  },
-  nationality: {
-    presence: {
-      message: "is required",
+      tooShort: "needs to have 2 letters or more",
     },
   },
 };
-var artistProfile = {
-  artistic_name: {
+
+var changePassword = {
+  oldPassword: {
     presence: {
       message: "is required",
     },
-    length: {
-      minimum: 2,
-      tooShort: "needs to have 2 words or more",
-    },
-  },
-  start_date: {
-    presence: {
-      message: "is required",
+    format: {
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      message: "must be 8 characters and contains both letter and digit",
     },
   },
-  nationality: {
+  password: {
     presence: {
       message: "is required",
+    },
+    format: {
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      message: "must be 8 characters and contains both letter and digit",
     },
   },
 };
-module.exports = { clientProfile: clientProfile, artistProfile: artistProfile };
+
+module.exports = { updateUserProfile };
