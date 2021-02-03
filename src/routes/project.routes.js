@@ -12,7 +12,7 @@ router.get(
   "/:id",
   projectController.getProject,
   connectEnsureLogin.ensureLoggedIn()
-);
+); //TODO: Add tags
 
 // If Admin
 router.post(
