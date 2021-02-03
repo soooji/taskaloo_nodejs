@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const dbConn = mysql.createConnection({
   host: process.env.IP,
   user: process.env.DB_USER,
-  port: "8889",
+  port: process.env.DB_PORT,
   password: process.env.DB_PASS,
   database: "taskaloo",
 });
