@@ -1,34 +1,35 @@
 const express = require("express");
 const router = express.Router();
 const projectController = require("../controllers/project.controller");
-const connectEnsureLogin = require("connect-ensure-login");
+// const connectEnsureLogin = require("connect-ensure-login");
+const passport = require("passport");
 
 router.get(
   "/",
   projectController.getProjects,
-  connectEnsureLogin.ensureLoggedIn()
+  passport.authenticate("jwt", { session: false })
 );
 router.get(
   "/:id",
   projectController.getProject,
-  connectEnsureLogin.ensureLoggedIn()
+  passport.authenticate("jwt", { session: false })
 );
 
 // If Admin
 router.post(
   "/",
   projectController.createProject,
-  connectEnsureLogin.ensureLoggedIn()
+  passport.authenticate("jwt", { session: false })
 );
 router.delete(
   "/:id",
   projectController.deleteProject,
-  connectEnsureLogin.ensureLoggedIn()
+  passport.authenticate("jwt", { session: false })
 );
 router.put(
   "/:id",
   projectController.updateProject,
-  connectEnsureLogin.ensureLoggedIn()
+  passport.authenticate("jwt", { session: false })
 );
 
 module.exports = router;

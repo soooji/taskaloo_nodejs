@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
-const connectEnsureLogin = require("connect-ensure-login");
+// const connectEnsureLogin = require("connect-ensure-login");
 const passport = require("passport");
 
 // All users
