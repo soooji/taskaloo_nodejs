@@ -1,7 +1,7 @@
 "use strict";
 var dbConn = require("./../../config/db.config");
 // var utils = require("../../utils/main.utils");
-// var mysql = require("mysql");
+var mysql = require("mysql");
 
 var Tag = function (tag) {
   this.name = tag.name;
@@ -45,15 +45,50 @@ Tag.findByName = function (tagName, result) {
 };
 
 Tag.addTagsToTask = function (taskTags, result) {
+  if (taskTags.length == 0) {
+    return result(null, "Empty List!");
+  }
+  dbConn.query("INSERT INTO tasks_tags set ?", taskTags, function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+    } else {
+      result(null, res.insertId);
+    }
+  });
+};
+
+Tag.removeTaskTags = function (taskId, result) {
   dbConn.query(
-    "INSERT INTO tags (task_id, tag_id) VALUES ?",
-    taskTags,
+    "DELETE FROM tasks_tags WHERE task_id = ?",
+    taskId,
     function (err, res) {
       if (err) {
         console.log("error: ", err);
         result(err, null);
       } else {
-        result(null, res.insertId);
+        result(null, taskId);
+      }
+    }
+  );
+};
+
+Tag.getTaskTags = function (taskId, result) {
+  dbConn.query(
+    `
+    SELECT tags.id, tags.name
+    FROM (
+      tasks_tags INNER JOIN tags ON tasks_tags.tag_id = tags.id
+    )
+    WHERE tasks_tags.task_id = ${mysql.escape(taskId)}
+    `,
+    taskId,
+    function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+      } else {
+        result(null, res);
       }
     }
   );

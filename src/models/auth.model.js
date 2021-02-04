@@ -56,4 +56,20 @@ User.getAnswer = function (username, result) {
     }
   );
 };
+
+User.findByUsername = function (username, result) {
+  dbConn.query(
+    "Select id, username, email, password, salt, first_name, last_name from users where username = ? ",
+    username,
+    function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+      } else {
+        result(null, res);
+      }
+    }
+  );
+};
+
 module.exports = User;

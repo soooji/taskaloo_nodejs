@@ -16,24 +16,44 @@ exports.register = function (req, res) {
       },
     });
   } else {
-    const new_user = new User(req.body);
-    User.register(new_user, function (err, user) {
+    User.findByUsername(req.body.username, function (err, foundUser) {
       if (err) {
-        // res.send(err);
         res.status(406).send({
           error: true,
           message: {
-            text: err.sqlMessage
-              ? err.sqlMessage
-              : "Entered data are not acceptable",
-            details: err,
+            text: "Cannot check username availability!",
+            details: checkResult,
+          },
+        });
+      } else if (!foundUser || foundUser.length != 0) {
+        res.status(406).send({
+          error: true,
+          message: {
+            text: "Duplicate username!",
+            details: checkResult,
           },
         });
       } else {
-        res.json({
-          error: false,
-          message: "User added successfully!",
-          data: user,
+        const new_user = new User(req.body);
+        User.register(new_user, function (err, user) {
+          if (err) {
+            // res.send(err);
+            res.status(406).send({
+              error: true,
+              message: {
+                text: err.sqlMessage
+                  ? err.sqlMessage
+                  : "Entered data are not acceptable",
+                details: err,
+              },
+            });
+          } else {
+            res.json({
+              error: false,
+              message: "User added successfully!",
+              data: user,
+            });
+          }
         });
       }
     });

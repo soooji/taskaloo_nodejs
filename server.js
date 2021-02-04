@@ -97,6 +97,11 @@ app.get("/", (req, res) => {
   console.log(req.sessionID);
 });
 
+app.get("/login", (req, res) => {
+  res.send("Login First!");
+  console.log(req.sessionID);
+});
+
 // Require users routes
 
 // using as middleware

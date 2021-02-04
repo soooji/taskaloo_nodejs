@@ -70,6 +70,20 @@ Project.getProject = function (id, result) {
   );
 };
 
+Project.getProjectTasks = function (id, result) {
+  dbConn.query(
+    `SELECT * FROM tasks WHERE tasks.project_id = ${mysql.escape(id)} `,
+    function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        return result(err, null);
+      } else {
+        return result(null, res);
+      }
+    }
+  );
+};
+
 Project.deleteProject = function (id, result) {
   dbConn.query(
     `DELETE FROM projects WHERE id = ${mysql.escape(id)}`,

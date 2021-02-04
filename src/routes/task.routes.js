@@ -14,23 +14,23 @@ router.put(
   "/:id",
   taskController.updateTask,
   connectEnsureLogin.ensureLoggedIn()
-); //including tag_id s
+);
 router.delete(
   "/:id",
   taskController.deleteTask,
   connectEnsureLogin.ensureLoggedIn()
 );
 
-//comment
 router.post(
-  "/comment",
-  taskController.postComment,
+  "/:id/comment",
+  taskController.comment,
   connectEnsureLogin.ensureLoggedIn()
-); //task_id should be in req body
+);
+
 router.delete(
   "/comment/:id",
-  taskController.postComment,
+  taskController.deleteComment,
   connectEnsureLogin.ensureLoggedIn()
-); //if is the writer of task
+);
 
 module.exports = router;
