@@ -19,7 +19,7 @@ exports.getTasks = function (req, res) {
       });
     } else {
       if (data.length == 0) {
-        res.json(data);
+        res.json({ data, token: req.query.secret_token });
       } else {
         let tasks = data;
         Tasks.getAllTaskTags(function (err, allTaskTags) {
@@ -70,7 +70,10 @@ exports.getTasks = function (req, res) {
                   return item.status_id;
                 });
 
-                res.json(groupedByStatus);
+                res.json({
+                  data: groupedByStatus,
+                  token: req.query.secret_token,
+                });
               }
             });
           }
@@ -159,7 +162,10 @@ exports.getTask = function (req, res) {
                             });
                           } else {
                             targetTask["comments"] = taskComments;
-                            res.json(targetTask);
+                            res.json({
+                              data: targetTask,
+                              token: req.query.secret_token,
+                            });
                           }
                         }
                       );
@@ -202,8 +208,7 @@ exports.createTask = function (req, res) {
       } else {
         if (!req.body.tags && !req.body.users) {
           res.json({
-            error: false,
-            message: "Task created successfully!",
+            token: req.query.secret_token,
             data: insertId,
           });
         }
@@ -230,8 +235,7 @@ exports.createTask = function (req, res) {
           } else {
             if (!req.body.tags) {
               res.json({
-                error: false,
-                message: "Task created successfully!",
+                token: req.query.secret_token,
                 data: insertId,
               });
             } else {
@@ -257,8 +261,7 @@ exports.createTask = function (req, res) {
                   });
                 } else {
                   res.json({
-                    error: false,
-                    message: "Task created successfully!",
+                    token: req.query.secret_token,
                     data: insertId,
                   });
                 }
@@ -309,8 +312,7 @@ exports.deleteTask = function (req, res) {
               });
             } else {
               res.json({
-                error: false,
-                message: "Task deleted successfuly!",
+                token: req.query.secret_token,
                 data: data,
               });
             }
@@ -358,8 +360,7 @@ exports.updateTask = function (req, res) {
             } else {
               if (!req.body.tags && !req.body.users) {
                 res.json({
-                  error: false,
-                  message: "Task updated successfully!",
+                  token: req.query.secret_token,
                   data: req.params.id,
                 });
               }
@@ -386,8 +387,7 @@ exports.updateTask = function (req, res) {
                 } else {
                   if (!req.body.tags) {
                     res.json({
-                      error: false,
-                      message: "Task updated successfully!",
+                      token: req.query.secret_token,
                       data: req.params.id,
                     });
                   } else {
@@ -413,8 +413,7 @@ exports.updateTask = function (req, res) {
                         });
                       } else {
                         res.json({
-                          error: false,
-                          message: "Task updated successfully!",
+                          token: req.query.secret_token,
                           data: req.params.id,
                         });
                       }
@@ -438,7 +437,7 @@ exports.comment = function (req, res) {
   Tasks.comment(comment, function (err, data) {
     if (err) res.send(err);
     else {
-      res.json(data);
+      res.json({ data, token: req.query.secret_token });
     }
   });
 };
@@ -454,11 +453,7 @@ exports.deleteComment = function (req, res) {
         },
       });
     } else {
-      res.json({
-        error: false,
-        message: "Comment deleted successfuly!",
-        data: data,
-      });
+      res.json({ data, token: req.query.secret_token });
     }
   });
 };

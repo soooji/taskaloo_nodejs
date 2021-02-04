@@ -6,13 +6,13 @@ const passport = require("passport");
 
 router.get(
   "/",
-  tagController.getTags,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  tagController.getTags
 );
 router.post(
   "/",
-  tagController.createTag,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  tagController.createTag
 );
 
 module.exports = router;

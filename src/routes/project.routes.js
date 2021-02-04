@@ -6,30 +6,31 @@ const passport = require("passport");
 
 router.get(
   "/",
-  projectController.getProjects,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  projectController.getProjects
 );
+
 router.get(
   "/:id",
-  projectController.getProject,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  projectController.getProject
 );
 
 // If Admin
 router.post(
   "/",
-  projectController.createProject,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  projectController.createProject
 );
 router.delete(
   "/:id",
-  projectController.deleteProject,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  projectController.deleteProject
 );
 router.put(
   "/:id",
-  projectController.updateProject,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  projectController.updateProject
 );
 
 module.exports = router;

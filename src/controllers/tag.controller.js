@@ -7,7 +7,7 @@ var utils = require("./../../utils/main.utils");
 exports.getTags = function (req, res) {
   Tags.get(function (err, data) {
     if (err) res.send(err);
-    res.json(data);
+    res.json({ data, token: req.query.secret_token });
   });
 };
 
@@ -57,9 +57,8 @@ exports.createTag = function (req, res) {
             });
           } else {
             res.json({
-              error: false,
-              message: "Tag created successfully!",
-              data: tag,
+              token: req.query.secret_token,
+              tag: tag,
             });
           }
         });

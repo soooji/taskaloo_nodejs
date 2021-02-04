@@ -40,11 +40,7 @@ exports.createProject = function (req, res) {
               },
             });
           } else {
-            res.json({
-              error: false,
-              message: "Project added successfully!",
-              data: projectItem,
-            });
+            res.json({ project: projectItem, token: req.query.secret_token });
           }
         });
       }
@@ -90,9 +86,8 @@ exports.updateProject = function (req, res) {
               });
             } else {
               res.json({
-                error: false,
-                message: "Project updated successfully!",
-                data: projectItem,
+                project: projectItem,
+                token: req.query.secret_token,
               });
             }
           }
@@ -114,7 +109,7 @@ exports.getProjects = function (req, res) {
       });
     } else {
       console.log(data);
-      res.json(data);
+      res.json({ data, token: req.query.secret_token });
     }
   });
 };
@@ -146,7 +141,7 @@ exports.getProject = function (req, res) {
           });
         } else {
           projectItem["tasks"] = data;
-          res.json(projectItem);
+          res.json({ project: projectItem, token: req.query.secret_token });
         }
       });
     }
@@ -156,7 +151,6 @@ exports.getProject = function (req, res) {
 exports.deleteProject = function (req, res) {
   User.getUserById(req.user.id, function (err, user) {
     if (err) res.send(err);
-    console.log(user.is_admin);
     if (!user.is_admin) {
       res.status(406).send({
         error: true,
@@ -178,7 +172,7 @@ exports.deleteProject = function (req, res) {
             },
           });
         } else {
-          res.json(data);
+          res.json({ data, token: req.query.secret_token });
         }
       });
     }

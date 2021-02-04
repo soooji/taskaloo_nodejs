@@ -29,11 +29,7 @@ exports.updateProfile = function (req, res) {
           },
         });
       } else {
-        res.json({
-          error: false,
-          message: "Profile updated successfully!",
-          data: user,
-        });
+        res.json({ token: req.query.secret_token });
       }
     });
   }
@@ -60,7 +56,7 @@ exports.getUsers = function (req, res) {
     } else {
       User.getUsers(function (err, users) {
         if (err) res.send(err);
-        res.json(users);
+        res.json({ users, token: req.query.secret_token });
       });
     }
   });
@@ -81,7 +77,7 @@ exports.getUserItem = function (req, res) {
     } else {
       User.getUserById(req.params.id, function (err, user) {
         if (err) res.send(err);
-        res.json(user);
+        res.json({ user, token: req.query.secret_token });
       });
     }
   });
@@ -106,11 +102,7 @@ exports.changePassword = function (req, res) {
             { ...req.body, password: req.body.password },
             function (err, result) {
               if (!err) {
-                res.json({
-                  error: false,
-                  message: "Password changed successfully!",
-                  data: null,
-                });
+                res.json({ token: req.query.secret_token });
               } else {
                 res.status(406).send({
                   error: true,

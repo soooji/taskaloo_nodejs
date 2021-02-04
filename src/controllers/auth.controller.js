@@ -49,11 +49,7 @@ exports.register = function (req, res) {
               },
             });
           } else {
-            res.json({
-              error: false,
-              message: "User added successfully!",
-              data: user,
-            });
+            res.json({ token: req.query.secret_token });
           }
         });
       }
@@ -154,11 +150,7 @@ exports.forgetPassword = function (req, res) {
             { ...req.body, password: newPass.passwordHash },
             function (err, result) {
               if (!err) {
-                res.json({
-                  error: false,
-                  message: "Password change successfully!",
-                  data: null,
-                });
+                res.json({ token: req.query.secret_token });
               } else {
                 res.status(406).send({
                   error: true,

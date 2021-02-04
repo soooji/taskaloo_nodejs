@@ -6,40 +6,40 @@ const passport = require("passport");
 
 router.get(
   "/",
-  taskController.getTasks,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.getTasks
 ); //grouped by status including tags
 router.post(
   "/",
-  taskController.createTask,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.createTask
 ); //including tag_id s
 router.get(
   "/:id",
-  taskController.getTask,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.getTask
 ); //including comments and tags
 router.put(
   "/:id",
-  taskController.updateTask,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.updateTask
 );
 router.delete(
   "/:id",
-  taskController.deleteTask,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.deleteTask
 );
 
 router.post(
   "/:id/comment",
-  taskController.comment,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.comment
 );
 
 router.delete(
   "/comment/:id",
-  taskController.deleteComment,
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", { session: false }),
+  taskController.deleteComment
 );
 
 module.exports = router;
