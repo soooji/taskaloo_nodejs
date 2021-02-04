@@ -7,29 +7,32 @@ const passport = require("passport");
 // All users
 router.get(
   "/profile",
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate("jwt", { session: false }),
   userController.getUser
 );
 
 router.put(
   "/profile",
-  connectEnsureLogin.ensureLoggedIn(),
+  passport.authenticate("jwt", { session: false }),
   userController.updateProfile
 );
 
 router.put(
   "/change-password",
-  connectEnsureLogin.ensureLoggedIn(),
+  passport.authenticate("jwt", { session: false }),
   userController.changePassword
 );
 
 // If Admin
-router.get("/all", connectEnsureLogin.ensureLoggedIn(), userController.getUsers);
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  userController.getUsers
+);
 router.get(
   "/all/:id",
-  connectEnsureLogin.ensureLoggedIn(),
+  passport.authenticate("jwt", { session: false }),
   userController.getUserItem
 );
-
 
 module.exports = router;
