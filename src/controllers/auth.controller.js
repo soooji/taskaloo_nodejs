@@ -75,7 +75,11 @@ exports.login = function (req, res, next) {
         const body = { id: user.id, username: user.username };
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 
-        return res.json({ token });
+        const userToSend = { ...user };
+        delete userToSend.password;
+        delete userToSend.salt;
+
+        return res.json({ ...userToSend, token });
       });
     } catch (error) {
       return next(error);
