@@ -66,7 +66,7 @@ User.updateUserProfile = function (userId, user, result) {
 
 User.findByUsername = function (username, result) {
   dbConn.query(
-    "Select id, username, email, password, salt, first_name, last_name from users where username = ? ",
+    "Select id, username, email, password, salt, first_name, last_name, is_admin from users where username = ? ",
     username,
     function (err, res) {
       if (err) {
