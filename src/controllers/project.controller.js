@@ -103,32 +103,20 @@ exports.updateProject = function (req, res) {
 };
 
 exports.getProjects = function (req, res) {
-  if (!req.user) {
-    return res.status(406).send({
-      error: true,
-      message: {
-        text: "You should login first!",
-        details: null,
-      },
-    });
-  } else {
-    Project.getProjects(function (err, data) {
-      if (err) {
-        res.status(406).send({
-          error: true,
-          message: {
-            text: err.sqlMessage
-              ? err.sqlMessage
-              : "Could not get target list.",
-            details: err,
-          },
-        });
-      } else {
-        console.log(data);
-        res.json(data);
-      }
-    });
-  }
+  Project.getProjects(function (err, data) {
+    if (err) {
+      res.status(406).send({
+        error: true,
+        message: {
+          text: err.sqlMessage ? err.sqlMessage : "Could not get target list.",
+          details: err,
+        },
+      });
+    } else {
+      console.log(data);
+      res.json(data);
+    }
+  });
 };
 
 exports.getProject = function (req, res) {
