@@ -42,7 +42,7 @@ exports.updateProfile = function (req, res) {
 exports.getUser = function (req, res) {
   User.getUserById(req.user.id, function (err, user) {
     if (err) res.send(err);
-    res.json(user);
+    res.json({ ...user, token: req.query.secret_token });
   });
 };
 

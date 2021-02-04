@@ -6,6 +6,10 @@ const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+
+var JWTstrategy = require("passport-jwt").Strategy,
+ExtractJWT = require("passport-jwt").ExtractJwt;
+
 var utils = require("./utils/main.utils");
 var cors = require("cors");
 
@@ -25,6 +29,68 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // configure passport.js to use the local strategy
+
+var opts = {};
+opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = "secret";
+opts.issuer = "5.253.24.115";
+opts.audience = "5.253.24.115";
+
+// passport.use(
+//   "login",
+//   new JwtStrategy(
+//     opts,
+//     (username, password, done) => {
+//       User.findByUsername(username, function (err, user) {
+//         if (!err && user[0]) {
+//           const hashedPass = utils.saltHash(password, user[0].salt);
+//           if (
+//             username === user[0].username &&
+//             hashedPass.passwordHash === user[0].password
+//           ) {
+//             let userToSend = user[0];
+//             delete userToSend.password;
+//             delete userToSend.salt;
+//             return done(null, user[0]);
+//           } else {
+//             return done(Error("Username or password is incorrect!"), null);
+//           }
+//         } else {
+//           return done(err, null);
+//         }
+//       });
+//     }
+//     //  function(jwt_payload, done) {
+//     // User.findOne({id: jwt_payload.sub}, function(err, user) {
+//     //     if (err) {
+//     //         return done(err, false);
+//     //     }
+//     //     if (user) {
+//     //         return done(null, user);
+//     //     } else {
+//     //         return done(null, false);
+//     //         // or you could create a new account
+//     //     }
+//     // });}
+//   )
+// );
+
+passport.use(
+  new JWTstrategy(
+    {
+      secretOrKey: "TOP_SECRET",
+      jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token"),
+    },
+    async (token, done) => {
+      try {
+        return done(null, token.user);
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
+
 passport.use(
   new LocalStrategy(
     { usernameField: "username" },
