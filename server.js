@@ -7,6 +7,7 @@ const FileStore = require("session-file-store")(session);
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 var utils = require("./utils/main.utils");
+var cors = require('cors')
 
 const userRoutes = require("./src/routes/user.routes");
 const authRoutes = require("./src/routes/auth.routes");
@@ -90,6 +91,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cors())
 
 // define a root route
 app.get("/", (req, res) => {
