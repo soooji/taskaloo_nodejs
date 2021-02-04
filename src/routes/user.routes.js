@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
 const connectEnsureLogin = require("connect-ensure-login");
+const passport = require("passport");
 
 // All users
 router.get(
   "/profile",
-  connectEnsureLogin.ensureLoggedIn(),
+  passport.authenticate('jwt', { session: false }),
   userController.getUser
 );
 
