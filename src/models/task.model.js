@@ -120,7 +120,7 @@ Task.removeTask = function (taskId, result) {
 };
 
 Task.updateTask = function (id, task, result) {
-  let data = {...task};
+  let data = { ...task };
   delete data.users;
   delete data.tags;
   dbConn.query(
@@ -195,6 +195,7 @@ Task.getTaskComments = function (taskId, result) {
     SELECT comments.*, users.id as user_id, users.first_name, users.last_name, users.email
     FROM (comments INNER JOIN users ON comments.user_id = users.id)
     WHERE comments.task_id = ${mysql.escape(taskId)}
+    ORDER BY id DESC
     `,
     taskId,
     function (err, res) {
