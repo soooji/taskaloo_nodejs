@@ -100,7 +100,7 @@ exports.changePassword = function (req, res) {
         const newHashedPass = utils.saltHash(req.body.password, user[0].salt);
         if (hashedPass.passwordHash === user[0].password) {
           User.changePassword(
-            { password: newHashedPass, username: user[0].username },
+            { password: newHashedPass.passwordHash, id: user[0].id },
             function (err, result) {
               if (!err) {
                 res.json({ token: req.query.secret_token });

@@ -79,10 +79,10 @@ User.findByUsername = function (username, result) {
   );
 };
 
-User.findById = function (username, result) {
+User.findById = function (id, result) {
   dbConn.query(
     "Select id, username, email, password, salt, first_name, last_name from users where id = ? ",
-    username,
+    id,
     function (err, res) {
       if (err) {
         console.log("error: ", err);
@@ -96,8 +96,8 @@ User.findById = function (username, result) {
 
 User.changePassword = function (user, result) {
   dbConn.query(
-    "UPDATE users SET password=? WHERE username = ?",
-    [user.password, user.username],
+    "UPDATE users SET password=? WHERE id = ?",
+    [user.password, user.id],
     function (err, res) {
       if (err) {
         console.log("error: ", err);
