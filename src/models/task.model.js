@@ -121,8 +121,8 @@ Task.removeTask = function (taskId, result) {
 
 Task.updateTask = function (id, task, result) {
   dbConn.query(
-    "UPDATE tasks SET ? WHERE id = ?",
-    [task, id],
+    `UPDATE tasks SET ? WHERE id = ${mysql.escape(id)}`,
+    task,
     function (err, res) {
       if (err) {
         console.log("error: ", err);
