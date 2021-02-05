@@ -5,7 +5,6 @@ var validate = require("validate.js");
 var constraints = require("../validators/auth.validatros");
 var utils = require("./../../utils/main.utils");
 const jwt = require("jsonwebtoken");
-
 exports.register = function (req, res) {
   let checkResult = validate(req.body, constraints.register);
   if (checkResult) {
@@ -61,9 +60,15 @@ exports.login = function (req, res, next) {
   passport.authenticate("local", async (err, user, info) => {
     try {
       if (err || !user) {
-        const error = new Error("An error occurred.");
-
-        return next(error);
+        return res.status(401).send({
+          error: true,
+          message: {
+            text: err.message
+              ? err.message
+              : "Username or Password is incorrect",
+            details: null,
+          },
+        });
       }
       req.login(user, { session: false }, async (error) => {
         if (error) return next(error);
@@ -78,7 +83,16 @@ exports.login = function (req, res, next) {
         return res.json({ ...userToSend, token });
       });
     } catch (error) {
-      return next(error);
+      res.status(401).send({
+        error: true,
+        message: {
+          text: error.message
+            ? error.message
+            : "Username or Password is incorrect",
+          details: null,
+        },
+      });
+      // return next(error);
     }
   })(req, res, next);
   // passport.authenticate("local", (err, user, info) => {

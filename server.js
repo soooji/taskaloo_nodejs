@@ -6,9 +6,11 @@ const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const rateLimit = require("express-rate-limit");
+var get_ip = require("ipware")().get_ip;
 
 var JWTstrategy = require("passport-jwt").Strategy,
-ExtractJWT = require("passport-jwt").ExtractJwt;
+  ExtractJWT = require("passport-jwt").ExtractJwt;
 
 var utils = require("./utils/main.utils");
 var cors = require("cors");
@@ -36,45 +38,6 @@ opts.secretOrKey = "secret";
 opts.issuer = "5.253.24.115";
 opts.audience = "5.253.24.115";
 
-// passport.use(
-//   "login",
-//   new JwtStrategy(
-//     opts,
-//     (username, password, done) => {
-//       User.findByUsername(username, function (err, user) {
-//         if (!err && user[0]) {
-//           const hashedPass = utils.saltHash(password, user[0].salt);
-//           if (
-//             username === user[0].username &&
-//             hashedPass.passwordHash === user[0].password
-//           ) {
-//             let userToSend = user[0];
-//             delete userToSend.password;
-//             delete userToSend.salt;
-//             return done(null, user[0]);
-//           } else {
-//             return done(Error("Username or password is incorrect!"), null);
-//           }
-//         } else {
-//           return done(err, null);
-//         }
-//       });
-//     }
-//     //  function(jwt_payload, done) {
-//     // User.findOne({id: jwt_payload.sub}, function(err, user) {
-//     //     if (err) {
-//     //         return done(err, false);
-//     //     }
-//     //     if (user) {
-//     //         return done(null, user);
-//     //     } else {
-//     //         return done(null, false);
-//     //         // or you could create a new account
-//     //     }
-//     // });}
-//   )
-// );
-
 passport.use(
   new JWTstrategy(
     {
@@ -91,10 +54,39 @@ passport.use(
   )
 );
 
+var failures = {};
+
+function onLoginFail(ip) {
+  var f = (failures[ip] = failures[ip] || { count: 0, nextTry: new Date() });
+  ++f.count;
+  f.nextTry.setTime(Date.now() + 2000 * f.count); // Wait another two seconds for every failed attempt
+}
+
+function onLoginSuccess(ip) {
+  delete failures[ip];
+}
+
+// Clean up people that have given up
+var MINS10 = 600000,
+  MINS30 = 3 * MINS10;
+setInterval(function () {
+  for (var ip in failures) {
+    if (Date.now() - failures[ip].nextTry > MINS10) {
+      delete failures[ip];
+    }
+  }
+}, MINS30);
+
 passport.use(
   new LocalStrategy(
-    { usernameField: "username" },
-    (username, password, done) => {
+    { usernameField: "username", passReqToCallback: true },
+    (req, username, password, done) => {
+      console.log(failures);
+      let user_ip = get_ip(req).clientIp;
+      var f = failures[user_ip];
+      if (f && Date.now() < f.nextTry) {
+        return done(Error("Too many login try! Wait some minutes :)"), null);
+      }
       User.findByUsername(username, function (err, user) {
         if (!err && user[0]) {
           const hashedPass = utils.saltHash(password, user[0].salt);
@@ -105,8 +97,10 @@ passport.use(
             let userToSend = user[0];
             delete userToSend.password;
             delete userToSend.salt;
+            onLoginSuccess(user_ip);
             return done(null, user[0]);
           } else {
+            onLoginFail(user_ip);
             return done(Error("Username or password is incorrect!"), null);
           }
         } else {
@@ -166,6 +160,14 @@ app.use(
   })
 );
 
+//limiter (Brute Force)
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 100,
+  message: "Too many requests from this IP",
+});
+app.use(limiter);
+
 // define a root route
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -176,10 +178,6 @@ app.get("/login", (req, res) => {
   res.send("Login First!");
   console.log(req.sessionID);
 });
-
-// Require users routes
-
-// using as middleware
 
 const BASE_API = "/api/v1/";
 
@@ -193,3 +191,42 @@ app.use(BASE_API + "tag", tagRoutes);
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
+
+// passport.use(
+//   "login",
+//   new JwtStrategy(
+//     opts,
+//     (username, password, done) => {
+//       User.findByUsername(username, function (err, user) {
+//         if (!err && user[0]) {
+//           const hashedPass = utils.saltHash(password, user[0].salt);
+//           if (
+//             username === user[0].username &&
+//             hashedPass.passwordHash === user[0].password
+//           ) {
+//             let userToSend = user[0];
+//             delete userToSend.password;
+//             delete userToSend.salt;
+//             return done(null, user[0]);
+//           } else {
+//             return done(Error("Username or password is incorrect!"), null);
+//           }
+//         } else {
+//           return done(err, null);
+//         }
+//       });
+//     }
+//     //  function(jwt_payload, done) {
+//     // User.findOne({id: jwt_payload.sub}, function(err, user) {
+//     //     if (err) {
+//     //         return done(err, false);
+//     //     }
+//     //     if (user) {
+//     //         return done(null, user);
+//     //     } else {
+//     //         return done(null, false);
+//     //         // or you could create a new account
+//     //     }
+//     // });}
+//   )
+// );
