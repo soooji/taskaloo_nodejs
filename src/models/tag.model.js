@@ -44,18 +44,45 @@ Tag.findByName = function (tagName, result) {
   );
 };
 
-Tag.addTagsToTask = function (taskTags, result) {
+// Tag.addTagsToTask = function (taskTags, result) {
+//   if (taskTags.length == 0) {
+//     return result(null, "Empty List!");
+//   }
+//   dbConn.query("INSERT INTO tasks_tags SET ?", taskTags, function (err, res) {
+//     if (err) {
+//       console.log("error: ", err);
+//       result(err, null);
+//     } else {
+//       result(null, res.insertId);
+//     }
+//   });
+// };
+
+Task.addTagsToTask = function (taskTags, result) {
   if (taskTags.length == 0) {
     return result(null, "Empty List!");
   }
-  dbConn.query("INSERT INTO tasks_tags VALUES ?", taskTags, function (err, res) {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-    } else {
-      result(null, res.insertId);
+  let error = null;
+  for (let i = 0; i < taskTags.length; i++) {
+    if (error) {
+      return result(error, null);
     }
-  });
+    dbConn.query(
+      "INSERT INTO tasks_tags SET ?",
+      taskTags[i],
+      function (err, res) {
+        if (err) {
+          console.log("error: ", err);
+          error = err;
+        }
+      }
+    );
+  }
+  if (error) {
+    return result(error, null);
+  } else {
+    result(null, "Success!");
+  }
 };
 
 Tag.removeTaskTags = function (taskId, result) {

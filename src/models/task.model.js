@@ -62,14 +62,27 @@ Task.createUserTasks = function (taskUsers, result) {
   if (taskUsers.length == 0) {
     return result(null, "Empty List!");
   }
-  dbConn.query("INSERT INTO users_tasks VALUES ?", taskUsers, function (err, res) {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-    } else {
-      result(null, res.insertId);
+  let error = null;
+  for (let i = 0; i < taskUsers.length; i++) {
+    if (error) {
+      return result(error, null);
     }
-  });
+    dbConn.query(
+      "INSERT INTO users_tasks SET ?",
+      taskUsers[i],
+      function (err, res) {
+        if (err) {
+          console.log("error: ", err);
+          error = err;
+        }
+      }
+    );
+  }
+  if (error) {
+    return result(error, null);
+  } else {
+    result(null, "Success!");
+  }
 };
 
 Task.getTaskUsers = function (taskId, result) {
