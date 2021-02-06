@@ -58,7 +58,7 @@ Tag.findByName = function (tagName, result) {
 //   });
 // };
 
-Task.addTagsToTask = function (taskTags, result) {
+Tag.addTagsToTask = function (taskTags, result) {
   if (taskTags.length == 0) {
     return result(null, "Empty List!");
   }
