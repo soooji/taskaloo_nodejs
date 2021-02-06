@@ -48,7 +48,7 @@ Tag.addTagsToTask = function (taskTags, result) {
   if (taskTags.length == 0) {
     return result(null, "Empty List!");
   }
-  dbConn.query("INSERT INTO tasks_tags set ?", taskTags, function (err, res) {
+  dbConn.query("INSERT INTO tasks_tags VALUES ?", taskTags, function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(err, null);
