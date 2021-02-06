@@ -29,6 +29,11 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   userController.getUsers
 );
+router.put(
+  "/all/:id",
+  passport.authenticate("jwt", { session: false }),
+  userController.putUserByAdmin
+);
 router.get(
   "/all/:id",
   passport.authenticate("jwt", { session: false }),

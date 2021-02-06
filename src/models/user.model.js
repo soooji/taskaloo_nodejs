@@ -63,6 +63,27 @@ User.updateUserProfile = function (userId, user, result) {
     }
   });
 };
+User.updateUserProfileByAdmin = function (userId, user, result) {
+  let query =
+    "UPDATE users SET first_name=?,last_name=?,email=?, is_admin=? WHERE id = ?";
+  let data = [
+    user.first_name,
+    user.last_name,
+    user.email,
+    user.is_admin,
+    userId,
+  ];
+
+  dbConn.query(query, data, function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+    } else {
+      console.log(res);
+      result(null, res);
+    }
+  });
+};
 
 User.findByUsername = function (username, result) {
   dbConn.query(

@@ -45,6 +45,16 @@ exports.getUser = function (req, res) {
 exports.getUsers = function (req, res) {
   User.getUserById(req.user.id, function (err, user) {
     if (err) res.send(err);
+    User.getUsers(function (err, users) {
+      if (err) res.send(err);
+      res.json({ users, token: req.query.secret_token });
+    });
+  });
+};
+
+exports.putUserByAdmin = function (req, res) {
+  User.getUserById(req.user.id, function (err, user) {
+    if (err) res.send(err);
     if (!user.is_admin) {
       res.status(406).send({
         error: true,
@@ -54,10 +64,14 @@ exports.getUsers = function (req, res) {
         },
       });
     } else {
-      User.getUsers(function (err, users) {
-        if (err) res.send(err);
-        res.json({ users, token: req.query.secret_token });
-      });
+      User.updateUserProfileByAdmin(
+        req.params.id,
+        req.body,
+        function (err, users) {
+          if (err) res.send(err);
+          res.json({ data: users, token: req.query.secret_token });
+        }
+      );
     }
   });
 };
