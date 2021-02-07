@@ -30,7 +30,7 @@ var register = {
       message: "is required",
     },
     format: {
-      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/,
       message: "must be 8 characters and contains both letter and digit",
     },
   },
@@ -78,7 +78,7 @@ var changePassword = {
       message: "is required",
     },
     format: {
-      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/,
       message: "must be 8 characters and contains both letter and digit",
     },
   },
