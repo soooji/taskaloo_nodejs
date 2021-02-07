@@ -31,7 +31,6 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // configure passport.js to use the local strategy
-
 var opts = {};
 opts.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = "secret";
