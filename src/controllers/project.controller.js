@@ -1,6 +1,7 @@
 "use strict";
 const Project = require("../models/project.model");
 const User = require("../models/user.model");
+const Task = require("../models/task.model");
 var validate = require("validate.js");
 var constraints = require("../validators/project.validators");
 var utils = require("./../../utils/main.utils");
@@ -167,12 +168,26 @@ exports.deleteProject = function (req, res) {
             message: {
               text: err.sqlMessage
                 ? err.sqlMessage
-                : "Could not get target item.",
+                : "Could not remove target project.",
               details: err,
             },
           });
         } else {
-          res.json({ data, token: req.query.secret_token });
+          Task.removeProjectTasks(req.params.id, function (err, data2) {
+            if (err) {
+              res.status(406).send({
+                error: true,
+                message: {
+                  text: err.sqlMessage
+                    ? err.sqlMessage
+                    : "Could not delete target project tasks.",
+                  details: err,
+                },
+              });
+            } else {
+              res.json({ data: data2, token: req.query.secret_token });
+            }
+          });
         }
       });
     }

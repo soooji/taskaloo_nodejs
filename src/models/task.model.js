@@ -132,6 +132,21 @@ Task.removeTask = function (taskId, result) {
   });
 };
 
+Task.removeProjectTasks = function (projectId, result) {
+  dbConn.query(
+    "DELETE FROM tasks WHERE project_id = ?",
+    projectId,
+    function (err, res) {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+      } else {
+        result(null, projectId);
+      }
+    }
+  );
+};
+
 Task.updateTask = function (id, task, result) {
   let data = { ...task };
   delete data.users;
