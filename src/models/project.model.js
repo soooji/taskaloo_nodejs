@@ -10,7 +10,8 @@ var Project = function (project) {
 };
 
 Project.create = function (newProject, result) {
-  dbConn.query("INSERT INTO projects set ?", newProject, function (err, res) {
+  let reformedData = { ...newProject, create_date: new Date() };
+  dbConn.query("INSERT INTO projects set ?", reformedData, function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(err, null);

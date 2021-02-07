@@ -47,8 +47,8 @@ Task.get = function (taskId, result) {
 };
 
 Task.create = function (data, result) {
-  console.log(data);
-  dbConn.query("INSERT INTO tasks set ?", data, function (err, res) {
+  let reformedData = { ...data, create_date: new Date() };
+  dbConn.query("INSERT INTO tasks set ?", reformedData, function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(err, null);

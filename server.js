@@ -20,6 +20,7 @@ const authRoutes = require("./src/routes/auth.routes");
 const projectRoutes = require("./src/routes/project.routes");
 const taskRoutes = require("./src/routes/task.routes");
 const tagRoutes = require("./src/routes/tag.routes");
+const statRoutes = require("./src/routes/stat.routes");
 
 //modules needed for auth
 const User = require("./src/models/user.model");
@@ -185,6 +186,7 @@ app.use(BASE_API + "auth", authRoutes);
 app.use(BASE_API + "project", projectRoutes);
 app.use(BASE_API + "task", taskRoutes);
 app.use(BASE_API + "tag", tagRoutes);
+app.use(BASE_API + "stat", statRoutes);
 
 // listen for requests
 app.listen(port, () => {

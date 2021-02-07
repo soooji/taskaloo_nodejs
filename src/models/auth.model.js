@@ -17,7 +17,8 @@ var User = function (user) {
 };
 
 User.register = function (newUser, result) {
-  dbConn.query("INSERT INTO users set ?", newUser, function (err, res) {
+  let reformedUser = { ...newUser, create_date: new Date() };
+  dbConn.query("INSERT INTO users set ?", reformedUser, function (err, res) {
     if (err) {
       console.log("error: ", err);
       result(err, null);
